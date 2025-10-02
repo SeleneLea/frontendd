@@ -1,17 +1,15 @@
-
 import React, { useState } from 'react';
 import { Box, Button, Card, TextField, Typography, CircularProgress } from '@mui/material';
-import { FaBuilding, FaSignInAlt } from 'react-icons/fa';
-import axios from 'axios';
-
-// La URL base de tu backend. Asegúrate de que tu backend esté corriendo.
-const API_URL = 'http://127.0.0.1:8000'; 
+import { FaBuilding, FaSignInAlt, FaCog } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { authService } from '../../services/authService';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -19,32 +17,33 @@ const LoginPage = () => {
         setError('');
 
         try {
-            // Hacemos la llamada a la API que vi en tu backend (Django Simple JWT)
-            const response = await axios.post(`${API_URL}/api/token/`, {
-                username,
-                password,
-            });
+            // Usar el servicio de autenticación actualizado
+            const result = await authService.login(username, password);
 
-            // Si la autenticación es exitosa, el backend devuelve tokens.
-            // Por ahora, solo mostraremos un alert.
-            console.log('Authentication successful:', response.data);
-            alert('¡Inicio de sesión exitoso!');
-            
-            // Aquí guardaríamos los tokens (lo veremos después)
-            // localStorage.setItem('accessToken', response.data.access);
-            // localStorage.setItem('refreshToken', response.data.refresh);
+            if (result.success) {
+                // Si la autenticación es exitosa
+                console.log('Authentication successful:', result);
+                alert(result.message);
+                
+                // Redirigir al dashboard (por ahora a tests)
+                navigate('/tests');
+            } else {
+                // Mostrar error del servicio
+                setError(result.error);
+            }
 
         } catch (err) {
-            // Manejo de errores
-            if (err.response && err.response.status === 401) {
-                setError('Credenciales incorrectas. Por favor, inténtelo de nuevo.');
-            } else {
-                setError('Error de conexión con el servidor. ¿El backend está funcionando?');
-                console.error('Login error:', err);
-            }
+            // Manejo de errores inesperados
+            setError('Error inesperado. Por favor, inténtelo de nuevo.');
+            console.error('Login error:', err);
         } finally {
             setLoading(false);
         }
+    };
+
+    // Función para navegar a tests (temporal)
+    const goToTests = () => {
+        navigate('/tests');
     };
 
     return (
@@ -99,6 +98,30 @@ const LoginPage = () => {
                         {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                     </Button>
                 </form>
+
+                {/* Botón temporal para ir directamente a tests */}
+                <Box sx={{ mt: 3, textAlign: 'center' }}>
+                    <Button
+                        variant="outlined"
+                        onClick={goToTests}
+                        startIcon={<FaCog />}
+                        size="small"
+                    >
+                        Ir a Tests API
+                    </Button>
+                </Box>
+
+                {/* Información de usuarios de prueba */}
+                <Box sx={{ mt: 3, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                    <Typography variant="body2" color="textSecondary" sx={{ mb: 1, fontWeight: 'bold' }}>
+                        👥 Usuarios de Prueba:
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" sx={{ fontSize: '0.75rem' }}>
+                        <strong>Admin:</strong> admin / admin123<br />
+                        <strong>Residente:</strong> residente1 / isaelOrtiz2<br />
+                        <strong>Seguridad:</strong> seguridad1 / guardia123
+                    </Typography>
+                </Box>
             </Card>
         </Box>
     );
