@@ -22,6 +22,7 @@ import ComunicacionPage from './pages/Comunicacion/ComunicacionPage';
 import ReportesPage from './pages/Reportes/ReportesPage';
 import ConfiguracionPage from './pages/Configuracion/ConfiguracionPage';
 import TestRunnerPage from './pages/TestRunner/TestRunnerPage';
+import ConnectivityTestPage from './pages/ConnectivityTest/ConnectivityTestPage';
 
 // Tema personalizado
 const theme = createTheme({
@@ -96,8 +97,9 @@ function App() {
               <Route path="reportes" element={<ReportesPage />} />
               <Route path="configuracion" element={<ConfiguracionPage />} />
               
-              {/* Página de tests (temporal) */}
+              {/* Páginas de tests */}
               <Route path="tests" element={<TestRunnerPage />} />
+              <Route path="connectivity-test" element={<ConnectivityTestPage />} />
             </Route>
 
             {/* Redirección por defecto */}

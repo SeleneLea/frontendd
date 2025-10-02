@@ -19,12 +19,15 @@ import {
   FaUsers,
   FaChartLine,
   FaExclamationTriangle,
-  FaCheckCircle
+  FaCheckCircle,
+  FaNetworkWired
 } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardPage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     residents: 0,
     financialHealth: 0,
@@ -266,6 +269,15 @@ const DashboardPage = () => {
                   sx={{ justifyContent: 'flex-start' }}
                 >
                   Generar Reporte
+                </Button>
+                <Button 
+                  variant="outlined" 
+                  startIcon={<FaNetworkWired />}
+                  fullWidth
+                  sx={{ justifyContent: 'flex-start' }}
+                  onClick={() => navigate('/connectivity-test')}
+                >
+                  Test de Conectividad
                 </Button>
               </Box>
             </CardContent>

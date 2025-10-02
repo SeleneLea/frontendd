@@ -65,8 +65,8 @@ const LoginPage = () => {
 
   const handleTestLogin = () => {
     setFormData({
-      username: 'admin',
-      password: 'admin123'
+      username: 'webadmin',
+      password: 'webadmin123'
     });
   };
 
